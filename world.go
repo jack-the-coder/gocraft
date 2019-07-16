@@ -224,10 +224,8 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 	for dx := 0; dx < ChunkWidth; dx++ {
 		for dz := 0; dz < ChunkWidth; dz++ {
 			x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
-			f := noise2(float32(x)*0.01, float32(z)*0.01, int(rand.Float32()*16), rand.Float32(), rand.Float32()*4)
-			g := noise2(float32(-x)*0.01, float32(-z)*0.01, int(rand.Float32()*16), rand.Float32(), rand.Float32()*4)
-			mh := int(g*32 + 16)
-			h := int(f * float32(mh))
+                        h := int(0.001*abs(-pow(float32(x*z)*0.2, 1.2)))
+                        print("\nx: ", x, "z: ", z, "thing: ", h)
 			w := grassBlock
 			if h <= 12 {
 				h = 12

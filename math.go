@@ -11,6 +11,20 @@ var (
 	sim = opensimplex.NewWithSeed(0)
 )
 
+// func customNoise (x, y float32) float32 {
+//         return abs(float32(10*sim.Eval2(float64(x), float64(y))))
+// }
+// 
+// func simplexHeight(x, y float32) float32 {
+//         e := 1 * customNoise(1*x, 1*y) + 0.5 * customNoise(2*x, 2*y) + 0.25 * customNoise(4*x,4*y)
+//         print("\n", math.Pow(float64(e), 1.5))
+//         return float32(math.Pow(float64(e), 1.5))
+// }
+
+func pow(x, y float32) float32 {
+        return float32(math.Pow(float64(x), float64(y)))
+}
+
 func abs(x float32) float32 {
 	return float32(math.Abs(float64(x)))
 }
