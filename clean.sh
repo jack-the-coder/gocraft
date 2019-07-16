@@ -1,5 +1,4 @@
 #!/bin/sh
 
 rm gocraft.db
-go build
-./gocraft
+go build && ./gocraft
