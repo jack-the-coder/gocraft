@@ -3,15 +3,13 @@ package main
 import (
 	"log"
 	"sync"
-        "math/rand"
         "flag"
 
 	"github.com/go-gl/mathgl/mgl32"
 	lru "github.com/hashicorp/golang-lru"
 )
 
-var seedFlag = flag.Int("seed", 112233, "world generation seed")
-var seed = int64(*seedFlag)
+var worldType = flag.Int("type", 0, "world type")
 
 type World struct {
 	mutex  sync.Mutex
@@ -211,7 +209,6 @@ func (w *World) Chunks(ids []Vec3) []*Chunk {
 }
 
 func makeChunkMap(cid Vec3) map[Vec3]int {
-        rand.Seed(seed)
 	const (
 		grassBlock = 1
 		sandBlock  = 2
@@ -221,6 +218,9 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 	)
 	m := make(map[Vec3]int)
 	p, q := cid.X, cid.Z
+        switch *worldType {
+        case 0:
+
 	for dx := 0; dx < ChunkWidth; dx++ {
 		for dz := 0; dz < ChunkWidth; dz++ {
 			x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
@@ -278,6 +278,7 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 				}
 			}
 		}
+              }
 	}
 	return m
 }
