@@ -220,12 +220,11 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 	p, q := cid.X, cid.Z
 	switch *worldType {
 	case 0:
-
 		for dx := 0; dx < ChunkWidth; dx++ {
 			for dz := 0; dz < ChunkWidth; dz++ {
 				x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
 				h := int(0.001 * abs(-pow(float32(x*z)*0.2, 1.2)))
-				print("\nx: ", x, "z: ", z, "thing: ", h)
+				// print("\nx: ", x, "z: ", z, "thing: ", h)
 				w := grassBlock
 				if h <= 12 {
 					h = 12
@@ -279,6 +278,17 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 				}
 			}
 		}
+	case 1:
+		for dx := 0; dx < ChunkWidth; dx++ {
+			for dz := 0; dz < ChunkWidth; dz++ {
+				x, z := p*chunkWidth+dx, q*chunkWidth+dx
+				w := wood
+				h := 10
+				for y := 0; y < h; y++ {
+					m[Vec3{x, y, z}] = w
+				}
+		
+
 	}
 	return m
 }
