@@ -215,6 +215,7 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 		grass      = 17
 		leaves     = 15
 		wood       = 5
+		stone      = 6
 	)
 	m := make(map[Vec3]int)
 	p, q := cid.X, cid.Z
@@ -281,8 +282,8 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 	case 1:
 		for dx := 0; dx < ChunkWidth; dx++ {
 			for dz := 0; dz < ChunkWidth; dz++ {
-				x, z := p*ChunkWidth+dx, q*ChunkWidth+dx
-				w := wood
+				x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
+				w := stone
 				h := 10
 				for y := 0; y < h; y++ {
 					m[Vec3{x, y, z}] = w
