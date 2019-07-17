@@ -1,9 +1,9 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"sync"
-        "flag"
 
 	"github.com/go-gl/mathgl/mgl32"
 	lru "github.com/hashicorp/golang-lru"
@@ -218,67 +218,67 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 	)
 	m := make(map[Vec3]int)
 	p, q := cid.X, cid.Z
-        switch *worldType {
-        case 0:
+	switch *worldType {
+	case 0:
 
-	for dx := 0; dx < ChunkWidth; dx++ {
-		for dz := 0; dz < ChunkWidth; dz++ {
-			x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
-                        h := int(0.001*abs(-pow(float32(x*z)*0.2, 1.2)))
-                        print("\nx: ", x, "z: ", z, "thing: ", h)
-			w := grassBlock
-			if h <= 12 {
-				h = 12
-				w = sandBlock
-			}
-			// grass and sand
-			for y := 0; y < h; y++ {
-				m[Vec3{x, y, z}] = w
-			}
+		for dx := 0; dx < ChunkWidth; dx++ {
+			for dz := 0; dz < ChunkWidth; dz++ {
+				x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
+				h := int(0.001 * abs(-pow(float32(x*z)*0.2, 1.2)))
+				print("\nx: ", x, "z: ", z, "thing: ", h)
+				w := grassBlock
+				if h <= 12 {
+					h = 12
+					w = sandBlock
+				}
+				// grass and sand
+				for y := 0; y < h; y++ {
+					m[Vec3{x, y, z}] = w
+				}
 
-			// flowers
-			if w == grassBlock {
-				if noise2(-float32(x)*0.1, float32(z)*0.1, 4, 0.8, 2) > 0.6 {
-					m[Vec3{x, h, z}] = grass
+				// flowers
+				if w == grassBlock {
+					if noise2(-float32(x)*0.1, float32(z)*0.1, 4, 0.8, 2) > 0.6 {
+						m[Vec3{x, h, z}] = grass
+					}
+					if noise2(float32(x)*0.05, float32(-z)*0.05, 4, 0.8, 2) > 0.7 {
+						w := 18 + int(noise2(float32(x)*0.1, float32(z)*0.1, 4, 0.8, 2)*7)
+						m[Vec3{x, h, z}] = w
+					}
 				}
-				if noise2(float32(x)*0.05, float32(-z)*0.05, 4, 0.8, 2) > 0.7 {
-					w := 18 + int(noise2(float32(x)*0.1, float32(z)*0.1, 4, 0.8, 2)*7)
-					m[Vec3{x, h, z}] = w
-				}
-			}
 
-			// tree
-			if w == 1 {
-				ok := true
-				if dx-4 < 0 || dz-4 < 0 ||
-					dx+4 > ChunkWidth || dz+4 > ChunkWidth {
-					ok = false
-				}
-				if ok && noise2(float32(x), float32(z), 6, 0.5, 2) > 0.79 {
-					for y := h + 3; y < h+8; y++ {
-						for ox := -3; ox <= 3; ox++ {
-							for oz := -3; oz <= 3; oz++ {
-								d := ox*ox + oz*oz + (y-h-4)*(y-h-4)
-								if d < 11 {
-									m[Vec3{x + ox, y, z + oz}] = leaves
+				// tree
+				if w == 1 {
+					ok := true
+					if dx-4 < 0 || dz-4 < 0 ||
+						dx+4 > ChunkWidth || dz+4 > ChunkWidth {
+						ok = false
+					}
+					if ok && noise2(float32(x), float32(z), 6, 0.5, 2) > 0.79 {
+						for y := h + 3; y < h+8; y++ {
+							for ox := -3; ox <= 3; ox++ {
+								for oz := -3; oz <= 3; oz++ {
+									d := ox*ox + oz*oz + (y-h-4)*(y-h-4)
+									if d < 11 {
+										m[Vec3{x + ox, y, z + oz}] = leaves
+									}
 								}
 							}
 						}
-					}
-					for y := h; y < h+7; y++ {
-						m[Vec3{x, y, z}] = wood
+						for y := h; y < h+7; y++ {
+							m[Vec3{x, y, z}] = wood
+						}
 					}
 				}
-			}
 
-			// cloud
-			for y := 64; y < 72; y++ {
-				if noise3(float32(x)*0.01, float32(y)*0.1, float32(z)*0.01, 8, 0.5, 2) > 0.69 {
-					m[Vec3{x, y, z}] = 16
+				// cloud
+				for y := 64; y < 72; y++ {
+					if noise3(float32(x)*0.01, float32(y)*0.1, float32(z)*0.01, 8, 0.5, 2) > 0.69 {
+						m[Vec3{x, y, z}] = 16
+					}
 				}
 			}
 		}
-              }
 	}
 	return m
 }
