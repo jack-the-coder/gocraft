@@ -281,14 +281,14 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 	case 1:
 		for dx := 0; dx < ChunkWidth; dx++ {
 			for dz := 0; dz < ChunkWidth; dz++ {
-				x, z := p*chunkWidth+dx, q*chunkWidth+dx
+				x, z := p*ChunkWidth+dx, q*ChunkWidth+dx
 				w := wood
 				h := 10
 				for y := 0; y < h; y++ {
 					m[Vec3{x, y, z}] = w
 				}
-		
-
+			}
+		}
 	}
 	return m
 }
