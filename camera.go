@@ -2,8 +2,10 @@ package main
 
 import "github.com/go-gl/mathgl/mgl32"
 
+// CameraMovement stored as int
 type CameraMovement int
 
+// forward is 0, backward is 1, left is 2, right is 3
 const (
 	MoveForward CameraMovement = iota
 	MoveBackward
@@ -11,6 +13,7 @@ const (
 	MoveRight
 )
 
+// Camera object stores camera state
 type Camera struct {
 	pos    mgl32.Vec3
 	up     mgl32.Vec3
@@ -20,11 +23,12 @@ type Camera struct {
 
 	rotatex, rotatey float32
 
-	Sens float32
+	Sens float32 // speed of rotations?
 
 	flying bool
 }
 
+// NewCamera returns a new camera object
 func NewCamera(pos mgl32.Vec3) *Camera {
 	c := &Camera{
 		pos:     pos,
@@ -38,6 +42,7 @@ func NewCamera(pos mgl32.Vec3) *Camera {
 	return c
 }
 
+// Restore sets camera state to relevant values from PlayerState
 func (c *Camera) Restore(state PlayerState) {
 	c.pos = mgl32.Vec3{state.X, state.Y, state.Z}
 	c.rotatex = state.Rx
@@ -45,6 +50,7 @@ func (c *Camera) Restore(state PlayerState) {
 	c.updateAngles()
 }
 
+// State serializes camera state into a PlayerState object
 func (c *Camera) State() PlayerState {
 	return PlayerState{
 		X:  c.pos.X(),
@@ -55,30 +61,37 @@ func (c *Camera) State() PlayerState {
 	}
 }
 
+// Matrix returns a 4x4 transform matrix from world space->eye space
 func (c *Camera) Matrix() mgl32.Mat4 {
 	return mgl32.LookAtV(c.pos, c.pos.Add(c.front), c.up)
 }
 
+// SetPos sets the camera location.
 func (c *Camera) SetPos(pos mgl32.Vec3) {
 	c.pos = pos
 }
 
+// Pos is a getter for Camera.pos
 func (c *Camera) Pos() mgl32.Vec3 {
 	return c.pos
 }
 
+// Front is a getter for Camera.front
 func (c *Camera) Front() mgl32.Vec3 {
 	return c.front
 }
 
+// FlipFlying toggles Camera.flying (on TAB press)
 func (c *Camera) FlipFlying() {
 	c.flying = !c.flying
 }
 
+// Flying is a getter for Camera.flying
 func (c *Camera) Flying() bool {
 	return c.flying
 }
 
+// OnAngleChange rotates the camera
 func (c *Camera) OnAngleChange(dx, dy float32) {
 	if mgl32.Abs(dx) > 200 || mgl32.Abs(dy) > 200 {
 		return
@@ -94,6 +107,7 @@ func (c *Camera) OnAngleChange(dx, dy float32) {
 	c.updateAngles()
 }
 
+// OnMoveChange moves the camera in XYZ space
 func (c *Camera) OnMoveChange(dir CameraMovement, delta float32) {
 	if c.flying {
 		delta = 5 * delta
@@ -117,6 +131,8 @@ func (c *Camera) OnMoveChange(dir CameraMovement, delta float32) {
 		c.pos = c.pos.Add(c.right.Mul(delta))
 	}
 }
+
+// updateAngles gets the new angles after rotations
 func (c *Camera) updateAngles() {
 	front := mgl32.Vec3{
 		cos(radian(c.rotatey)) * cos(radian(c.rotatex)),
