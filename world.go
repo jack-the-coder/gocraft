@@ -220,7 +220,7 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 	m := make(map[Vec3]int)
 	p, q := cid.X, cid.Z
 	switch *worldType {
-	case 0:
+	case 0: // slow z=(xy)^1.2 function
 		for dx := 0; dx < ChunkWidth; dx++ {
 			for dz := 0; dz < ChunkWidth; dz++ {
 				x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
@@ -279,7 +279,7 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 				}
 			}
 		}
-	case 1:
+	case 1: // 10 stone blocks
 		for dx := 0; dx < ChunkWidth; dx++ {
 			for dz := 0; dz < ChunkWidth; dz++ {
 				x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
@@ -290,7 +290,7 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 				}
 			}
 		}
-	case 2:
+	case 2: // type 1 with canyons and overhangs
 		for dx := 0; dx < ChunkWidth; dx++ {
 			for dz := 0; dz < ChunkWidth; dz++ {
 				x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
