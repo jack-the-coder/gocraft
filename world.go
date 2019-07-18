@@ -290,6 +290,19 @@ func makeChunkMap(cid Vec3) map[Vec3]int {
 				}
 			}
 		}
+	case 2:
+		for dx := 0; dx < ChunkWidth; dx++ {
+			for dz := 0; dz < ChunkWidth; dz++ {
+				x, z := p*ChunkWidth+dx, q*ChunkWidth+dz
+				w := stone
+				h := 10
+				for y := 0; y < h; y++ {
+					if !(noise3(float32(x)*0.01, float32(y)*0.1, float32(z)*0.01, 8, 0.5, 2) > 0.69) {
+						m[Vec3{x, y, z}] = w
+					}
+				}
+			}
+		}
 	}
 	return m
 }
